@@ -181,7 +181,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Rota de fallback para 404
+// Rota de fallback para 4045
 app.use('*', (req, res) => {
   res.status(404).json({ 
     error: 'Rota não encontrada',
