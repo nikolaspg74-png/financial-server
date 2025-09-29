@@ -165,8 +165,18 @@ app.get('/', (req, res) => {
 });
 
 // Iniciar servidor
-app.listen(PORT, () => {
+// Serve static files if needed
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Health check route (importante para produção)
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// Use porta do ambiente ou 3000 como fallback
+// const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
-  console.log(`📊 Acesse: http://localhost:${PORT}`);
-  console.log(`💾 Banco de dados: ${dbPath}`);
+  console.log(`🌍 Acesse: http://localhost:${PORT}`);
 });
