@@ -1,0 +1,11 @@
+# render.yaml na raiz do projeto
+services:
+  - type: web
+    name: financeiro-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production

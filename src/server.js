@@ -12,8 +12,9 @@ app.use(cors());
 app.use(express.json());
 
 // Database setup
-const dbPath = path.join(__dirname, '../financeiro.db');
-const db = new sqlite3.Database(dbPath);
+const dbPath = process.env.NODE_ENV === 'production' 
+  ? '/data/financeiro.db' 
+  : path.join(__dirname, '../financeiro.db');
 
 // Criar tabela e dados iniciais
 db.serialize(() => {
