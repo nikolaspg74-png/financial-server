@@ -166,7 +166,36 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+// Adicione esta rota no seu server.js
+app.put('/api/transacoes/:id', (req, res) => {
+  const { id } = req.params;
+  const { data, categoria, titulo, valor, tipo } = req.body;
+  
+  console.log(`✏️ PUT /api/transacoes/${id} chamado`, req.body);
 
+  if (!data || !categoria || !titulo || !valor || !tipo) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+  }
+
+  const sql = `UPDATE transacoes SET data = ?, categoria = ?, titulo = ?, valor = ?, tipo = ? WHERE id = ?`;
+  
+  db.run(sql, [data, categoria, titulo, parseFloat(valor), tipo, id], function(err) {
+    if (err) {
+      console.error('❌ Erro ao atualizar transação:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Transação não encontrada' });
+    }
+    
+    console.log('✅ Transação atualizada');
+    res.json({ 
+      message: 'Transação atualizada com sucesso!',
+      changes: this.changes
+    });
+  });
+});
 // Rota raiz
 app.get('/', (req, res) => {
   res.json({ 
@@ -180,6 +209,8 @@ app.get('/', (req, res) => {
     ]
   });
 });
+
+
 
 // Rota de fallback para 4045
 app.use('*', (req, res) => {
